@@ -1,0 +1,33 @@
+type: "orchestration"
+version: "1.0"
+pipeline:
+  components:
+    Start:
+      type: "start"
+      transitions:
+        unconditional:
+        - "Run A1"
+      parameters:
+        componentName: "Start"
+    Run A1:
+      type: "run-transformation"
+      parameters:
+        componentName: "Run A1"
+        transformationJob: "Assessments/A1.tran.yaml"
+        setScalarVariables:
+        setGridVariables:
+      postProcessing:
+        updateOutputMessage:
+        updateScalarVariables:
+design:
+  components:
+    Start:
+      position:
+        x: 0
+        "y": 0
+      tempMetlId: 1
+    Run A1:
+      position:
+        x: 110
+        "y": 0
+      tempMetlId: 2

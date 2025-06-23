@@ -1,0 +1,51 @@
+type: "orchestration"
+version: "1.0"
+pipeline:
+  components:
+    Start:
+      type: "start"
+      transitions:
+        unconditional:
+        - "Run SCD_TYPE2_NEW_RECORD_LOAD"
+      parameters:
+        componentName: "Start"
+    Run SCD_TYPE2_NEW_RECORD_LOAD:
+      type: "run-transformation"
+      transitions:
+        success:
+        - "Run SCD_TYPE2_CHANGE_RECORD_LOAD"
+      parameters:
+        componentName: "Run SCD_TYPE2_NEW_RECORD_LOAD"
+        transformationJob: "Assessments/Assignment_2/SCD_TYPE2_NEW_RECORD_LOAD.tran.yaml"
+        setScalarVariables:
+        setGridVariables:
+      postProcessing:
+        updateOutputMessage:
+        updateScalarVariables:
+    Run SCD_TYPE2_CHANGE_RECORD_LOAD:
+      type: "run-transformation"
+      parameters:
+        componentName: "Run SCD_TYPE2_CHANGE_RECORD_LOAD"
+        transformationJob: "Assessments/Assignment_2/SCD_TYPE2_CHANGE_RECORD_LOAD.tran.yaml"
+        setScalarVariables:
+        setGridVariables:
+      postProcessing:
+        updateOutputMessage:
+        updateScalarVariables:
+design:
+  components:
+    Start:
+      position:
+        x: 0
+        "y": 0
+      tempMetlId: 1
+    Run SCD_TYPE2_NEW_RECORD_LOAD:
+      position:
+        x: 190
+        "y": 0
+      tempMetlId: 2
+    Run SCD_TYPE2_CHANGE_RECORD_LOAD:
+      position:
+        x: 410
+        "y": 0
+      tempMetlId: 3

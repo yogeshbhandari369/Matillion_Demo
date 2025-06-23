@@ -1,0 +1,96 @@
+type: "transformation"
+version: "1.0"
+pipeline:
+  components:
+    CUSTOMERS_RAW:
+      type: "table-input"
+      parameters:
+        componentName: "CUSTOMERS_RAW"
+        database: "[Environment Default]"
+        schema: "RAW_SCHEMA"
+        targetTable: "CUSTOMERS_RAW"
+        columnNames:
+        - "CUSTOMER_ID"
+        - "NAME"
+        - "AGE"
+        - "TOTAL_SPEND"
+        - "REGION_NAME"
+        timeOffset:
+    Filter:
+      type: "filter"
+      sources:
+      - "CUSTOMERS_RAW"
+      parameters:
+        componentName: "Filter"
+        filterConditions:
+        - - "AGE"
+          - "Is"
+          - "Greater than or equal to"
+          - "30"
+        - - "TOTAL_SPEND"
+          - "Is"
+          - "Greater than or equal to"
+          - "3000"
+        combineCondition: "And"
+    Calculator:
+      type: "calculator"
+      sources:
+      - "Filter"
+      parameters:
+        componentName: "Calculator"
+        includeInputColumns: "Yes"
+        calculations:
+        - - "CASE \r\n  WHEN total_spend >= 5000 THEN 'Platinum'\r\n  WHEN total_spend\
+            \ >= 2000 THEN 'Gold'\r\n  ELSE 'Silver'\r\nEND"
+          - "CUSTOMER_TIER"
+    CUSTOMER_NEW:
+      type: "table-output"
+      sources:
+      - "Calculator"
+      parameters:
+        componentName: "CUSTOMER_NEW"
+        warehouse: "[Environment Default]"
+        database: "[Environment Default]"
+        schema: "RAW_SCHEMA"
+        targetTable: "CUSTOMER_NEW"
+        fixDataTypeMismatches: "No"
+        columnMapping:
+        - - "CUSTOMER_ID"
+          - "CUSTOMER_ID"
+        - - "NAME"
+          - "NAME"
+        - - "AGE"
+          - "AGE"
+        - - "TOTAL_SPEND"
+          - "TOTAL_SPEND"
+        - - "REGION_NAME"
+          - "REGION_NAME"
+        - - "customer_tier"
+          - "CUSTOMER_TIER"
+        orderBy:
+        outputMode: "Truncate"
+      postProcessing:
+        updateOutputMessage:
+        updateScalarVariables:
+design:
+  components:
+    CUSTOMERS_RAW:
+      position:
+        x: 0
+        "y": 0
+      tempMetlId: 1
+    Filter:
+      position:
+        x: 160
+        "y": 0
+      tempMetlId: 2
+    Calculator:
+      position:
+        x: 320
+        "y": 0
+      tempMetlId: 3
+    CUSTOMER_NEW:
+      position:
+        x: 480
+        "y": 0
+      tempMetlId: 4
