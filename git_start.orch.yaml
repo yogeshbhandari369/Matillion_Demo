@@ -6,16 +6,17 @@ pipeline:
       type: "start"
       transitions:
         unconditional:
-        - "Run A1"
+        - "SQL Script"
       parameters:
         componentName: "Start"
-    Run A1:
-      type: "run-transformation"
+    SQL Script:
+      type: "sql-executor"
       parameters:
-        componentName: "Run A1"
-        transformationJob: "Assessments/A1.tran.yaml"
-        setScalarVariables:
-        setGridVariables:
+        componentName: "SQL Script"
+        scriptLocation: "Component"
+        declareSqlVariables: "Include selected"
+        variablesToInclude:
+        sqlScript: "create table cust1(id int)"
       postProcessing:
         updateOutputMessage:
         updateScalarVariables:
@@ -26,8 +27,8 @@ design:
         x: 0
         "y": 0
       tempMetlId: 1
-    Run A1:
+    SQL Script:
       position:
-        x: 110
+        x: 160
         "y": 0
       tempMetlId: 2
